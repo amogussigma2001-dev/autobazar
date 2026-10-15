@@ -8,19 +8,20 @@
         body { background-color: #f4f7f6; color: #333; }
         header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: white; display: flex; align-items: center; gap: 10px; }
-        .nav-buttons { display: flex; gap: 15px; align-items: center; }
-        .btn { padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: 0.3s; cursor: pointer; border: none; display: inline-block; }
+        .nav-buttons { display: flex; gap: 12px; align-items: center; }
+        .btn { padding: 9px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: 0.3s; cursor: pointer; border: none; display: inline-block; }
         .btn-light { background: white; color: #1e3c72; }
         .btn-light:hover { background: #f0f0f0; }
         .btn-outline { background: transparent; border: 2px solid white; color: white; }
         .btn-outline:hover { background: white; color: #1e3c72; }
+        .btn-chat { background: #27ae60; color: white; padding: 8px 14px; font-size: 14px; margin-top: 10px; display: block; text-align: center; }
+        .btn-chat:hover { background: #219150; }
         .btn-danger { background: #e74c3c; color: white; padding: 6px 12px; font-size: 13px; margin-top: 10px; }
-        .btn-danger:hover { background: #c0392b; }
         .user-greeting { color: white; font-weight: 600; }
         
-        .hero { text-align: center; padding: 60px 20px; background: white; margin: 30px auto; max-width: 1000px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        .hero h1 { font-size: 36px; color: #1e3c72; margin-bottom: 15px; }
-        .hero p { font-size: 18px; color: #666; margin-bottom: 25px; }
+        .hero { text-align: center; padding: 50px 20px; background: white; margin: 30px auto; max-width: 1000px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .hero h1 { font-size: 34px; color: #1e3c72; margin-bottom: 12px; }
+        .hero p { font-size: 18px; color: #666; margin-bottom: 20px; }
         
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 60px; }
         .section-title { font-size: 26px; font-weight: bold; margin-bottom: 25px; color: #333; }
@@ -40,6 +41,7 @@
         <div class="nav-buttons">
             <a href="/add" class="btn btn-light">+ Додати оголошення</a>
             {% if user %}
+                <a href="/messages" class="btn btn-outline">💬 Повідомлення</a>
                 <span class="user-greeting">👤 {{ user }}</span>
                 {% if user == 'chikibamboni' %}
                     <a href="/admin" class="btn btn-light" style="background: #ffc107; color: #000;">Адмінка</a>
@@ -77,6 +79,9 @@
                         <div class="card-info">📅 Рік: {{ item.year or '—' }} • ⚙️ Пробіг: {{ item.mileage or '—' }} км</div>
                         {% if item.author %}
                             <div class="card-info" style="margin-top: 5px; color: #1e3c72; font-weight: 600;">👤 Продавець: {{ item.author }}</div>
+                            {% if user and user != item.author %}
+                                <a href="/chat/{{ item.author }}" class="btn btn-chat">💬 Написати продавцю</a>
+                            {% endif %}
                         {% endif %}
                         
                         {% if user and (user == item.author or user == 'chikibamboni') %}
