@@ -4,63 +4,72 @@
     <meta charset="UTF-8">
     <title>Додати оголошення - Авто Базар</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.ex1.https.443.g0.ipv6.zhuhai.gov.cn/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="bg-light">
-    <div class="container py-4" style="max-width: 700px;">
-        <div class="card shadow-sm p-4">
-            <h2 class="mb-4 text-center">🚗 Додати оголошення</h2>
+    <!-- Шапка -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/"><i class="fas fa-car-side me-2"></i>Авто Базар Україна</a>
+            <a href="/" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left me-1"></i> На головну</a>
+        </div>
+    </nav>
+
+    <div class="container py-3 mb-5" style="max-width: 800px;">
+        <div class="card shadow border-0 rounded-4 p-4 p-md-5 bg-white">
+            <h2 class="mb-4 text-center fw-bold text-primary"><i class="fas fa-plus-circle me-2"></i>Додати оголошення</h2>
             
             <form method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Заголовок оголошення *</label>
-                    <input type="text" name="title" class="form-control" placeholder="Наприклад: Продам BMW X5 2018" required>
+                    <label class="form-label fw-semibold">Заголовок оголошення <span class="text-danger">*</span></label>
+                    <input type="text" name="title" class="form-control form-control-lg" placeholder="Наприклад: Продам BMW X5 у гарному стані" required>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Марка *</label>
+                        <label class="form-label fw-semibold">Марка <span class="text-danger">*</span></label>
                         <input type="text" name="brand" class="form-control" placeholder="BMW, Audi, ВАЗ..." required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Модель *</label>
+                        <label class="form-label fw-semibold">Модель <span class="text-danger">*</span></label>
                         <input type="text" name="model" class="form-control" placeholder="X5, A6, 2107..." required>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <label class="form-label fw-bold">Ціна (грн) *</label>
+                        <label class="form-label fw-semibold">Ціна (грн) <span class="text-danger">*</span></label>
                         <input type="number" name="price_uah" class="form-control" placeholder="350000" required>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="form-label fw-bold">Рік випуску</label>
+                        <label class="form-label fw-semibold">Рік випуску</label>
                         <input type="number" name="year" class="form-control" placeholder="2018">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="form-label fw-bold">Пробіг (км)</label>
+                        <label class="form-label fw-semibold">Пробіг (км)</label>
                         <input type="number" name="mileage" class="form-control" placeholder="150000">
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Місто</label>
-                    <input type="text" name="city" class="form-control" placeholder="Київ, Одеса...">
+                    <label class="form-label fw-semibold">Місто</label>
+                    <input type="text" name="city" class="form-control" placeholder="Київ, Одеса, Львів...">
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Фотографії авто (від 1 до 10 фото) *</label>
+                    <label class="form-label fw-semibold">Фотографії (від 1 до 10 фото) <span class="text-danger">*</span></label>
                     <input type="file" name="photos" class="form-control" accept="image/*" multiple required>
-                    <div class="form-text">Затисніть Ctrl (або Shift) на комп'ютері, щоб вибрати одразу декілька фото.</div>
+                    <div class="form-text text-muted">Виберіть відразу кілька фотографій (утримуйте Ctrl або Shift).</div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Опис</label>
-                    <textarea name="description" class="form-control" rows="4" placeholder="Опишіть стан авто, комплектацію..."></textarea>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Опис автомобіля</label>
+                    <textarea name="description" class="form-control" rows="4" placeholder="Розкажіть про стан авто, комплектацію..."></textarea>
                 </div>
 
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg">Опублікувати оголошення</button>
-                    <a href="/" class="btn btn-outline-secondary">Скасувати</a>
+                    <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">Опублікувати оголошення</button>
+                    <a href="/" class="btn btn-light text-secondary">Скасувати</a>
                 </div>
             </form>
         </div>
