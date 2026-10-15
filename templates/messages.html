@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Мої повідомлення - Авто Базар</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f7f6; color: #333; }
+        header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: white; }
+        .btn-outline { background: transparent; border: 2px solid white; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #1e3c72; margin-bottom: 25px; }
+        .chat-list { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .chat-item { display: flex; align-items: center; justify-content: space-between; padding: 20px 25px; border-bottom: 1px solid #eee; text-decoration: none; color: #333; transition: background 0.2s; }
+        .chat-item:hover { background: #f9f9f9; }
+        .chat-user { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .btn-open { background: #1e3c72; color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; }
+        .empty { padding: 40px; text-align: center; color: #777; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">💬 Мої повідомлення</a>
+        <a href="/" class="btn-outline">← На головну</a>
+    </header>
+
+    <div class="container">
+        <h1>Ваші діалоги</h1>
+        <div class="chat-list">
+            {% if chat_users %}
+                {% for chat_user in chat_users %}
+                    <a href="/chat/{{ chat_user }}" class="chat-item">
+                        <div class="chat-user">👤 {{ chat_user }}</div>
+                        <div class="btn-open">Відкрити чат →</div>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <div class="empty">У вас поки немає активних діалогів. Напишіть продавцю оголошення!</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
