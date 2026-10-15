@@ -1,6 +1,8 @@
 import os
+import time
 from flask import Flask, redirect, render_template, request, session, url_for
 from supabase import Client, create_client
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "autobazar_super_secret_key_2026"
@@ -88,24 +90,38 @@ def add_announcement():
     brand = request.form.get("brand")
     model = request.form.get("model")
     price_uah = request.form.get("price_uah")
-    year = request.form.get("year")
+    year_val = request.form.get("year")
     mileage = request.form.get("mileage")
     city = request.form.get("city")
     description = request.form.get("description")
     author = session.get("username")
+
+    # Проверка года (строго от 2005 до 2026)
+    year = int(year_val) if year_val else None
+    if year is None or not (2005 <= year <= 2026):
+      return (
+          "Помилка: рік випуску повинен бути в межах від 2005 до 2026 року!",
+          400,
+      )
 
     photos = request.files.getlist("photos")
     valid_photos = [p for p in photos if p and p.filename != ""]
 
     image_urls = []
     for photo in valid_photos:
-      filename = photo.filename
+      clean_name = secure_filename(photo.filename) or "car.jpg"
+      unique_filename = f"{int(time.time())}_{clean_name}"
       file_bytes = photo.read()
+
       try:
         supabase.storage.from_("photos").upload(
-            filename, file_bytes, {"file-options": '{"upsert":true}'}
+            unique_filename,
+            file_bytes,
+            {"file-options": '{"contentType": "image/jpeg", "upsert": true}'},
         )
-        public_url = supabase.storage.from_("photos").get_public_url(filename)
+        public_url = supabase.storage.from_("photos").get_public_url(
+            unique_filename
+        )
         image_urls.append(public_url)
       except Exception as e:
         print(f"Помилка завантаження фото: {e}")
@@ -118,7 +134,7 @@ def add_announcement():
           "brand": brand,
           "model": model,
           "price_uah": float(price_uah) if price_uah else 0,
-          "year": int(year) if year else None,
+          "year": year,
           "mileage": int(mileage) if mileage else None,
           "city": city,
           "description": description,
