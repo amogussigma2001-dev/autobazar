@@ -124,6 +124,7 @@ def add_announcement():
           "description": description,
           "image_url": image_url_str,
           "author": author,
+          "category": "Автомобілі",
       }).execute()
     except Exception as e:
       return f"Помилка бази даних: {e}", 500
@@ -141,7 +142,6 @@ def delete_announcement(id):
   res = supabase.table("announcements").select("*").eq("id", id).execute()
   if res.data:
     item = res.data[0]
-    # Удалить может владелец или админ chikibamboni
     if (
         item.get("author") == session["username"]
         or session["username"] == "chikibamboni"
