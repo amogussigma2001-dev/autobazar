@@ -3,9 +3,8 @@ from flask import Flask, redirect, render_template, request, session, url_for
 from supabase import Client, create_client
 
 app = Flask(__name__)
-app.secret_key = "autobazar_super_secret_key_2026"  # Секретный ключ для сессий
+app.secret_key = "autobazar_super_secret_key_2026"
 
-# Подключение к базе данных Supabase
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
@@ -30,7 +29,6 @@ def register():
     email = request.form.get("email")
     password = request.form.get("password")
 
-    # Проверяем, занят ли юзернейм
     existing = (
         supabase.table("users")
         .select("*")
@@ -82,7 +80,6 @@ def logout():
 
 @app.route("/add", methods=["GET", "POST"])
 def add_announcement():
-  # Если пользователь не вошел в систему — перенаправляем на вход
   if "username" not in session:
     return redirect(url_for("login"))
 
@@ -100,9 +97,6 @@ def add_announcement():
     photos = request.files.getlist("photos")
     valid_photos = [p for p in photos if p and p.filename != ""]
 
-    if not (1 <= len(valid_photos) <= 10):
-      return "Помилка: потрібно завантажити від 1 до 10 фотографій!", 400
-
     image_urls = []
     for photo in valid_photos:
       filename = photo.filename
@@ -118,22 +112,57 @@ def add_announcement():
 
     image_url_str = ",".join(image_urls)
 
-    supabase.table("announcements").insert({
-        "title": title,
-        "brand": brand,
-        "model": model,
-        "price_uah": float(price_uah) if price_uah else 0,
-        "year": int(year) if year else None,
-        "mileage": int(mileage) if mileage else None,
-        "city": city,
-        "description": description,
-        "image_url": image_url_str,
-        "author": author,
-    }).execute()
+    try:
+      supabase.table("announcements").insert({
+          "title": title,
+          "brand": brand,
+          "model": model,
+          "price_uah": float(price_uah) if price_uah else 0,
+          "year": int(year) if year else None,
+          "mileage": int(mileage) if mileage else None,
+          "city": city,
+          "description": description,
+          "image_url": image_url_str,
+          "author": author,
+      }).execute()
+    except Exception as e:
+      return f"Помилка бази даних: {e}", 500
 
     return redirect(url_for("index"))
 
   return render_template("add.html")
+
+
+@app.route("/delete/<int:id>")
+def delete_announcement(id):
+  if "username" not in session:
+    return redirect(url_for("login"))
+
+  res = supabase.table("announcements").select("*").eq("id", id).execute()
+  if res.data:
+    item = res.data[0]
+    # Удалить может владелец или админ chikibamboni
+    if (
+        item.get("author") == session["username"]
+        or session["username"] == "chikibamboni"
+    ):
+      supabase.table("announcements").delete().eq("id", id).execute()
+
+  if session["username"] == "chikibamboni":
+    return redirect(url_for("admin"))
+  return redirect(url_for("index"))
+
+
+@app.route("/admin")
+def admin():
+  if session.get("username") != "chikibamboni":
+    return redirect(url_for("index"))
+
+  res = supabase.table("announcements").select("*").execute()
+  announcements = res.data if res.data else []
+  return render_template(
+      "admin.html", announcements=announcements, user=session.get("username")
+  )
 
 
 if __name__ == "__main__":
