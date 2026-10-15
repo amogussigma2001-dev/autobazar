@@ -3,76 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <title>Додати оголошення - Авто Базар</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.ex1.https.443.g0.ipv6.zhuhai.gov.cn/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f7f6; color: #333; }
+        header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: white; display: flex; align-items: center; gap: 10px; }
+        .btn { padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: 0.3s; cursor: pointer; border: none; display: inline-block; text-align: center; }
+        .btn-outline { background: transparent; border: 2px solid white; color: white; }
+        .btn-outline:hover { background: white; color: #1e3c72; }
+        
+        .form-container { max-width: 700px; margin: 40px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        h2 { color: #1e3c72; margin-bottom: 25px; text-align: center; font-size: 28px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
+        .required { color: #e74c3c; }
+        input[type="text"], input[type="number"], textarea, input[type="file"] { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.3s; }
+        input:focus, textarea:focus { border-color: #2a5298; box-shadow: 0 0 5px rgba(42,82,152,0.2); }
+        .row { display: flex; gap: 15px; }
+        .col { flex: 1; }
+        .help-text { font-size: 13px; color: #777; margin-top: 5px; }
+        .form-actions { display: flex; gap: 15px; margin-top: 30px; }
+        .btn-primary { background: #1e3c72; color: white; flex: 1; padding: 14px; font-size: 16px; }
+        .btn-primary:hover { background: #2a5298; }
+        .btn-secondary { background: #e0e0e0; color: #333; padding: 14px 25px; font-size: 16px; }
+        .btn-secondary:hover { background: #d0d0d0; }
+    </style>
 </head>
-<body class="bg-light">
-    <!-- Шапка -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/"><i class="fas fa-car-side me-2"></i>Авто Базар Україна</a>
-            <a href="/" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left me-1"></i> На головну</a>
-        </div>
-    </nav>
+<body>
+    <header>
+        <a href="/" class="logo">🚗 Авто Базар Україна</a>
+        <a href="/" class="btn btn-outline">← На головну</a>
+    </header>
 
-    <div class="container py-3 mb-5" style="max-width: 800px;">
-        <div class="card shadow border-0 rounded-4 p-4 p-md-5 bg-white">
-            <h2 class="mb-4 text-center fw-bold text-primary"><i class="fas fa-plus-circle me-2"></i>Додати оголошення</h2>
-            
-            <form method="POST" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Заголовок оголошення <span class="text-danger">*</span></label>
-                    <input type="text" name="title" class="form-control form-control-lg" placeholder="Наприклад: Продам BMW X5 у гарному стані" required>
-                </div>
+    <div class="form-container">
+        <h2>Додати оголошення</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Заголовок оголошення <span class="required">*</span></label>
+                <input type="text" name="title" placeholder="Наприклад: Продам BMW X5 у гарному стані" required>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">Марка <span class="text-danger">*</span></label>
-                        <input type="text" name="brand" class="form-control" placeholder="BMW, Audi, ВАЗ..." required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">Модель <span class="text-danger">*</span></label>
-                        <input type="text" name="model" class="form-control" placeholder="X5, A6, 2107..." required>
-                    </div>
+            <div class="row">
+                <div class="col form-group">
+                    <label>Марка <span class="required">*</span></label>
+                    <input type="text" name="brand" placeholder="BMW, Audi, ВАЗ..." required>
                 </div>
+                <div class="col form-group">
+                    <label>Модель <span class="required">*</span></label>
+                    <input type="text" name="model" placeholder="X5, A6, 2107..." required>
+                </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label fw-semibold">Ціна (грн) <span class="text-danger">*</span></label>
-                        <input type="number" name="price_uah" class="form-control" placeholder="350000" required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label fw-semibold">Рік випуску</label>
-                        <input type="number" name="year" class="form-control" placeholder="2018">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label fw-semibold">Пробіг (км)</label>
-                        <input type="number" name="mileage" class="form-control" placeholder="150000">
-                    </div>
+            <div class="row">
+                <div class="col form-group">
+                    <label>Ціна (грн) <span class="required">*</span></label>
+                    <input type="number" name="price_uah" placeholder="350000" required>
                 </div>
+                <div class="col form-group">
+                    <label>Рік випуску</label>
+                    <input type="number" name="year" placeholder="2018">
+                </div>
+                <div class="col form-group">
+                    <label>Пробіг (км)</label>
+                    <input type="number" name="mileage" placeholder="150000">
+                </div>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Місто</label>
-                    <input type="text" name="city" class="form-control" placeholder="Київ, Одеса, Львів...">
-                </div>
+            <div class="form-group">
+                <label>Місто</label>
+                <input type="text" name="city" placeholder="Київ, Одеса, Львів...">
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Фотографії (від 1 до 10 фото) <span class="text-danger">*</span></label>
-                    <input type="file" name="photos" class="form-control" accept="image/*" multiple required>
-                    <div class="form-text text-muted">Виберіть відразу кілька фотографій (утримуйте Ctrl або Shift).</div>
-                </div>
+            <div class="form-group">
+                <label>Фотографії (від 1 до 10 фото) <span class="required">*</span></label>
+                <input type="file" name="photos" accept="image/*" multiple required>
+                <div class="help-text">Виберіть відразу кілька фотографій (утримуйте Ctrl або Shift).</div>
+            </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-semibold">Опис автомобіля</label>
-                    <textarea name="description" class="form-control" rows="4" placeholder="Розкажіть про стан авто, комплектацію..."></textarea>
-                </div>
+            <div class="form-group">
+                <label>Опис автомобіля</label>
+                <textarea name="description" rows="4" placeholder="Розкажіть про стан авто, комплектацію..."></textarea>
+            </div>
 
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">Опублікувати оголошення</button>
-                    <a href="/" class="btn btn-light text-secondary">Скасувати</a>
-                </div>
-            </form>
-        </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Опублікувати оголошення</button>
+                <a href="/" class="btn btn-secondary">Скасувати</a>
+            </div>
+        </form>
     </div>
 </body>
 </html>
