@@ -9,6 +9,7 @@
         .container { max-width: 1000px; margin: 20px auto; }
         .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .price { color: #28a745; font-size: 22px; font-weight: bold; }
+        .no-cars { text-align: center; color: #775; padding: 30px; font-size: 18px; }
     </style>
 </head>
 <body>
@@ -18,16 +19,20 @@
     </header>
     <div class="container">
         <h2>Останні оголошення</h2>
-        <div class="card">
-            <h3>BMW 5 Series, 2019</h3>
-            <p>Одеса • 145 тис. км • Дизель</p>
-            <div class="price">670 000 ₴</div>
-        </div>
-        <div class="card">
-            <h3>Audi A6, 2018</h3>
-            <p>Київ • 115 тис. км • Бензин</p>
-            <div class="price">545 000 ₴</div>
-        </div>
+        
+        {% if announcements %}
+            {% for item in announcements %}
+            <div class="card">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.city }} • {{ item.mileage }} тис. км • {{ item.description }}</p>
+                <div class="price">{{ item.price_uah }} ₴</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card no-cars">
+                <p>Поки що немає жодного оголошення. Будьте першим!</p>
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>
