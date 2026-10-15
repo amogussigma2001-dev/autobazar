@@ -14,6 +14,8 @@
         .btn-light:hover { background: #f0f0f0; }
         .btn-outline { background: transparent; border: 2px solid white; color: white; }
         .btn-outline:hover { background: white; color: #1e3c72; }
+        .btn-danger { background: #e74c3c; color: white; padding: 6px 12px; font-size: 13px; margin-top: 10px; }
+        .btn-danger:hover { background: #c0392b; }
         .user-greeting { color: white; font-weight: 600; }
         
         .hero { text-align: center; padding: 60px 20px; background: white; margin: 30px auto; max-width: 1000px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
@@ -24,17 +26,12 @@
         .section-title { font-size: 26px; font-weight: bold; margin-bottom: 25px; color: #333; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
-        .card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
         .card-img { height: 200px; width: 100%; object-fit: cover; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #888; font-size: 14px; }
         .card-body { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
         .card-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; color: #222; }
         .card-price { font-size: 22px; font-weight: bold; color: #2a5298; margin-bottom: 15px; }
         .card-info { font-size: 14px; color: #666; margin-bottom: 6px; }
-        
-        .empty-state { text-align: center; padding: 60px; background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .empty-state h3 { font-size: 22px; color: #444; margin-bottom: 10px; }
-        .empty-state p { color: #777; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -44,6 +41,9 @@
             <a href="/add" class="btn btn-light">+ Додати оголошення</a>
             {% if user %}
                 <span class="user-greeting">👤 {{ user }}</span>
+                {% if user == 'chikibamboni' %}
+                    <a href="/admin" class="btn btn-light" style="background: #ffc107; color: #000;">Адмінка</a>
+                {% endif %}
                 <a href="/logout" class="btn btn-outline">Вийти</a>
             {% else %}
                 <a href="/login" class="btn btn-outline">Увійти</a>
@@ -76,17 +76,19 @@
                         <div class="card-info">📍 Місто: {{ item.city or 'Не вказано' }}</div>
                         <div class="card-info">📅 Рік: {{ item.year or '—' }} • ⚙️ Пробіг: {{ item.mileage or '—' }} км</div>
                         {% if item.author %}
-                            <div class="card-info" style="margin-top: 10px; color: #1e3c72; font-weight: 600;">👤 Продавець: {{ item.author }}</div>
+                            <div class="card-info" style="margin-top: 5px; color: #1e3c72; font-weight: 600;">👤 Продавець: {{ item.author }}</div>
+                        {% endif %}
+                        
+                        {% if user and (user == item.author or user == 'chikibamboni') %}
+                            <a href="/delete/{{ item.id }}" class="btn btn-danger" onclick="return confirm('Видалити це оголошення?')">🗑️ Видалити</a>
                         {% endif %}
                     </div>
                 </div>
                 {% endfor %}
             </div>
         {% else %}
-            <div class="empty-state">
+            <div class="text-center py-5">
                 <h3>Поки що немає жодного оголошення</h3>
-                <p>Будьте першим, хто додасть автомобіль на продаж!</p>
-                <a href="/add" class="btn btn-light" style="background: #1e3c72; color: white;">Додати авто</a>
             </div>
         {% endif %}
     </div>
