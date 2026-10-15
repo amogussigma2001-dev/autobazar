@@ -27,26 +27,30 @@ def index():
 def register():
   error = None
   if request.method == "POST":
-    username = request.form.get("username")
+    raw_username = request.form.get("username", "").strip()
+    username = raw_username.lower()  # Приводим к нижнему регистру
     email = request.form.get("email")
     password = request.form.get("password")
 
-    existing = (
-        supabase.table("users")
-        .select("*")
-        .eq("username", username)
-        .execute()
-    )
-    if existing.data:
-      error = "Користувач з таким ім'ям вже існує!"
+    if not username or not password:
+      error = "Заповніть усі поля!"
     else:
-      supabase.table("users").insert({
-          "username": username,
-          "email": email,
-          "password": password,
-      }).execute()
-      session["username"] = username
-      return redirect(url_for("index"))
+      existing = (
+          supabase.table("users")
+          .select("*")
+          .eq("username", username)
+          .execute()
+      )
+      if existing.data:
+        error = "Користувач з таким ім'ям вже існує!"
+      else:
+        supabase.table("users").insert({
+            "username": username,
+            "email": email,
+            "password": password,
+        }).execute()
+        session["username"] = username
+        return redirect(url_for("index"))
 
   return render_template("register.html", error=error)
 
@@ -55,7 +59,8 @@ def register():
 def login():
   error = None
   if request.method == "POST":
-    username = request.form.get("username")
+    raw_username = request.form.get("username", "").strip()
+    username = raw_username.lower()  # Приводим к нижнему регистру при входе
     password = request.form.get("password")
 
     res = (
@@ -178,7 +183,6 @@ def messages():
 
   current_user = session["username"]
 
-  # Отримуємо всі повідомлення, де ми є відправником або отримувачем
   sent = (
       supabase.table("messages")
       .select("receiver")
@@ -222,7 +226,6 @@ def chat(username):
       }).execute()
     return redirect(url_for("chat", username=username))
 
-  # Отримуємо переписку між двома користувачами
   m1 = (
       supabase.table("messages")
       .select("*")
@@ -244,7 +247,6 @@ def chat(username):
   if m2.data:
     all_messages.extend(m2.data)
 
-  # Сортуємо за датою
   all_messages.sort(key=lambda x: x.get("created_at", ""))
 
   return render_template(
