@@ -8,12 +8,13 @@
         body { background-color: #f4f7f6; color: #333; }
         header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: white; display: flex; align-items: center; gap: 10px; }
-        .nav-buttons { display: flex; gap: 15px; }
+        .nav-buttons { display: flex; gap: 15px; align-items: center; }
         .btn { padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: 0.3s; cursor: pointer; border: none; display: inline-block; }
         .btn-light { background: white; color: #1e3c72; }
         .btn-light:hover { background: #f0f0f0; }
         .btn-outline { background: transparent; border: 2px solid white; color: white; }
         .btn-outline:hover { background: white; color: #1e3c72; }
+        .user-greeting { color: white; font-weight: 600; }
         
         .hero { text-align: center; padding: 60px 20px; background: white; margin: 30px auto; max-width: 1000px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
         .hero h1 { font-size: 36px; color: #1e3c72; margin-bottom: 15px; }
@@ -41,7 +42,13 @@
         <a href="/" class="logo">🚗 Авто Базар Україна</a>
         <div class="nav-buttons">
             <a href="/add" class="btn btn-light">+ Додати оголошення</a>
-            <a href="#" class="btn btn-outline">Увійти</a>
+            {% if user %}
+                <span class="user-greeting">👤 {{ user }}</span>
+                <a href="/logout" class="btn btn-outline">Вийти</a>
+            {% else %}
+                <a href="/login" class="btn btn-outline">Увійти</a>
+                <a href="/register" class="btn btn-light" style="background: #ffc107; color: #000;">Реєстрація</a>
+            {% endif %}
         </div>
     </header>
 
@@ -68,6 +75,9 @@
                         <div class="card-price">{{ item.price_uah }} грн</div>
                         <div class="card-info">📍 Місто: {{ item.city or 'Не вказано' }}</div>
                         <div class="card-info">📅 Рік: {{ item.year or '—' }} • ⚙️ Пробіг: {{ item.mileage or '—' }} км</div>
+                        {% if item.author %}
+                            <div class="card-info" style="margin-top: 10px; color: #1e3c72; font-weight: 600;">👤 Продавець: {{ item.author }}</div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
