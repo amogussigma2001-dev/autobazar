@@ -96,7 +96,6 @@ def add_announcement():
     description = request.form.get("description")
     author = session.get("username")
 
-    # Проверка года (строго от 2005 до 2026)
     year = int(year_val) if year_val else None
     if year is None or not (2005 <= year <= 2026):
       return (
@@ -167,6 +166,93 @@ def delete_announcement(id):
   if session["username"] == "chikibamboni":
     return redirect(url_for("admin"))
   return redirect(url_for("index"))
+
+
+# --- ЧАТИ ТА ПОВІДОМЛЕННЯ ---
+
+
+@app.route("/messages")
+def messages():
+  if "username" not in session:
+    return redirect(url_for("login"))
+
+  current_user = session["username"]
+
+  # Отримуємо всі повідомлення, де ми є відправником або отримувачем
+  sent = (
+      supabase.table("messages")
+      .select("receiver")
+      .eq("sender", current_user)
+      .execute()
+  )
+  received = (
+      supabase.table("messages")
+      .select("sender")
+      .eq("receiver", current_user)
+      .execute()
+  )
+
+  chat_users = set()
+  if sent.data:
+    for m in sent.data:
+      chat_users.add(m["receiver"])
+  if received.data:
+    for m in received.data:
+      chat_users.add(m["sender"])
+
+  return render_template(
+      "messages.html", chat_users=list(chat_users), user=current_user
+  )
+
+
+@app.route("/chat/<username>", methods=["GET", "POST"])
+def chat(username):
+  if "username" not in session:
+    return redirect(url_for("login"))
+
+  current_user = session["username"]
+
+  if request.method == "POST":
+    text = request.form.get("text")
+    if text and text.strip():
+      supabase.table("messages").insert({
+          "sender": current_user,
+          "receiver": username,
+          "text": text.strip(),
+      }).execute()
+    return redirect(url_for("chat", username=username))
+
+  # Отримуємо переписку між двома користувачами
+  m1 = (
+      supabase.table("messages")
+      .select("*")
+      .eq("sender", current_user)
+      .eq("receiver", username)
+      .execute()
+  )
+  m2 = (
+      supabase.table("messages")
+      .select("*")
+      .eq("sender", username)
+      .eq("receiver", current_user)
+      .execute()
+  )
+
+  all_messages = []
+  if m1.data:
+    all_messages.extend(m1.data)
+  if m2.data:
+    all_messages.extend(m2.data)
+
+  # Сортуємо за датою
+  all_messages.sort(key=lambda x: x.get("created_at", ""))
+
+  return render_template(
+      "chat.html",
+      messages=all_messages,
+      other_user=username,
+      user=current_user,
+  )
 
 
 @app.route("/admin")
