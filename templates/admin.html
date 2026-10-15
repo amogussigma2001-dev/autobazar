@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Адмін-панель - Авто Базар</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f7f6; color: #333; }
+        header { background: linear-gradient(135deg, #d9534f, #c9302c); color: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: white; }
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        h1 { margin-bottom: 25px; color: #d9534f; }
+        .table { width: 100%; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-collapse: collapse; }
+        .table th, .table td { padding: 15px 20px; text-align: left; border-bottom: 1px solid #eee; }
+        .table th { background: #fafafa; font-weight: 600; color: #555; }
+        .btn-danger { background: #e74c3c; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-block; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-back { background: #333; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">🛡️ Адмін-панель (chikibamboni)</a>
+        <a href="/" class="btn-back">На головну</a>
+    </header>
+
+    <div class="container">
+        <h1>Керування усіма оголошеннями</h1>
+        
+        {% if announcements %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Заголовок</th>
+                        <th>Ціна</th>
+                        <th>Автор</th>
+                        <th>Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in announcements %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td><strong>{{ item.title }}</strong></td>
+                        <td>{{ item.price_uah }} грн</td>
+                        <td>{{ item.author or 'Невідомо' }}</td>
+                        <td>
+                            <a href="/delete/{{ item.id }}" class="btn-danger" onclick="return confirm('Видалити оголошення?')">Видалити</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Немає жодного оголошення.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
